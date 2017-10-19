@@ -31,7 +31,9 @@ public class Graph {
     // ----------------------------------------------------------------------------------------------------------
     // ----------------------------------------- Creation Functions ---------------------------------------------
     // ----------------------------------------------------------------------------------------------------------
-    public void fillGraph(String filepath , boolean isDrone) throws IOException {
+
+    public void fillGraph(String filepath , boolean isDrone, boolean isDigraph) throws IOException { // j'ai refait une formule dsns mon coin car ils demandent une formule récursive mais l'idée est là
+        if (isDrone){isDigraph=false;}
         Graph graph = this;
             List<String> rawLines = Files.readAllLines(Paths.get(filepath),StandardCharsets.UTF_8);
             boolean node_presentation = true;
@@ -46,7 +48,7 @@ public class Graph {
                     Node node = new Node();
                     if (isDrone){
                         node.setId(line.get(0));
-                        node.setRecharge(Boolean.parseBoolean(line.get(1)));
+                        node.setRecharge(line.get(1).equals("1"));
                     }else{
                         node.setId(line.get(1));
                     }
@@ -54,20 +56,23 @@ public class Graph {
                 }else { // après la présentation des noeuds, on les relie entre eux
                     Node node0 = graph.getNodeFromIndex(Integer.parseInt(line.get(0))-1);
                     Node node1 = graph.getNodeFromIndex(Integer.parseInt(line.get(1))-1);
+
                     double weight = 1;
                             if(isDrone){
                                 weight = Double.parseDouble(line.get(2));
                             }
                     Edge edge0 = new Edge(node0,node1,weight);
-                    Edge edge1 = new Edge(node1,node0,weight);
                     node0.addEdge(edge0);
-                    node1.addEdge(edge1);
                     graph.addEdgeInListOnly(edge0);
-                    graph.addEdgeInListOnly(edge1);
-
+                    if (! isDigraph){
+                        Edge edge1 = new Edge(node1,node0,weight);
+                        node1.addEdge(edge1);
+                        graph.addEdgeInListOnly(edge1);
+                    }
                 }
             }
     }
+
 
 
     public void addNode (Node node){
@@ -198,6 +203,22 @@ public class Graph {
         System.out.println(nodesIndex);
     }
     public void printWithInfos () {System.out.println("taille "+nodesIndex.size()+" nodes : " + nodesIndex);}
+    public void lireGraph (){
+        for (int i=0; i<this.nodes.size(); i++) {
+            Node node = this.nodes.get(i);
+            System.out.print("( objet"+node.id+" ");
+            if (node.getEdgesList() != null && node.getEdgesList().size()>0){
+                System.out.print(",(");
+                for ( int j=0; j< node.getEdgesList().size();j++) {
+                    Edge edge = node.getEdgesList().get(j);
+                    System.out.print(" ("+edge.to.getId()+", "+edge.getWeight()+" ) ");
+                }
+                System.out.println(") )");
+            }
+
+
+        }
+    }
 
     // ----------------------------------------------------------------------------------------------------------
     // ------------------------------------------- Les removers -------------------------------------------------
