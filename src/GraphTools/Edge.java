@@ -5,16 +5,12 @@ import java.util.List;
 
 public class Edge {
 protected Node from;
-protected String fromId; // on garde les noms car on les retiens pour la serialization
 protected Node to;
-protected String toId;
 protected double weight;
 
     public Edge(Node from, Node to, double weight) {
         this.from = from;
-        this.fromId = from.getId();
         this.to = to;
-        this.toId = to.getId();
         this.weight = weight;
     }
 
@@ -33,7 +29,6 @@ protected double weight;
 
     public void setFrom(Node from) {
         this.from = from;
-        this.fromId = from.getId();
     }
 
     public Node getTo() {
@@ -42,7 +37,6 @@ protected double weight;
 
     public void setTo(Node to) {
         this.to = to;
-        this.toId = to.getId();
     }
 
     public double getWeight() {
@@ -53,13 +47,6 @@ protected double weight;
         this.weight = length;
     }
 
-    public String getFromId() {
-        return fromId;
-    }
-
-    public String getToId() {
-        return toId;
-    }
 
 
     // ----------------------------------------------------------------------------------------------------------
@@ -90,17 +77,4 @@ protected double weight;
         }
         return edgesList;
     }
-    public void consolidate (Graph graph){
-        this.to = graph.getNodeFromId(toId);
-        this.from = graph.getNodeFromId(fromId);
-
-        this.from.consolidateEdgeOfNode(this);
-    }
-    public static List<Edge> consolidateEdgeList (List<Edge> edgesList, Graph graph){
-        for (Edge edge:edgesList) {
-            edge.consolidate(graph);
-        }
-        return edgesList;
-    }
-
 }

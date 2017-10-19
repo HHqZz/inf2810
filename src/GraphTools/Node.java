@@ -6,6 +6,7 @@ import java.util.List;
 public class Node {
     protected String id;
     protected List<Edge> edgesList;
+    protected boolean recharge;
 
 
     public Node(String id) {
@@ -19,6 +20,7 @@ public class Node {
 
 
     public void addEdge (Edge edge){
+        this.edgesList.remove(edge); //on évite de dupliquer
         this.edgesList.add(edge);
     }
 
@@ -40,19 +42,6 @@ public class Node {
     }
 
 
-    // --------------- Consolidate ---------------
-
-    public void consolidateEdgeOfNode (Edge edge){
-        if (edge.getFromId().equals(this.id)){
-//            for (GraphTools.Edge subEdge :this.edgesList) {
-            for (int i = 0; i <this.edgesList.size() ; i++) {
-                Edge subEdge = this.edgesList.get(i);
-                if (subEdge.getToId().equals(edge.getToId()) && subEdge.weight ==edge.getWeight()){
-                    this.edgesList.set(i,edge);
-                }
-            }
-        }
-    }
 
 
     // ----------------------------------------------------------------------------------------------------------
@@ -73,6 +62,15 @@ public class Node {
 
     public void setEdgesList(List<Edge> edgesList) {
         this.edgesList = edgesList;
+    }
+
+
+    public boolean isRecharge() {
+        return recharge;
+    }
+
+    public void setRecharge(boolean recharge) {
+        this.recharge = recharge;
     }
 
     // ----------------------------------------------------------------------------------------------------------

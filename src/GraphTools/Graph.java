@@ -1,11 +1,13 @@
 package GraphTools;
 
-import Algos.Library;
-import DataExtraction.FileReader;
-import DataExtraction.StopHandler;
-import DataExtraction.StopTimeHandler;
-import com.google.gson.Gson;
-
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -29,93 +31,62 @@ public class Graph {
     // ----------------------------------------------------------------------------------------------------------
     // ----------------------------------------- Creation Functions ---------------------------------------------
     // ----------------------------------------------------------------------------------------------------------
-    public void addLine(String line) throws IOException {
-        FileReader fr1StopTimes = new FileReader(Library.stopTimesDirectory(line));
-        StopTimeHandler handleStopTimes1 = new StopTimeHandler(fr1StopTimes);
+    public void fillGraph(String filepath , boolean isDrone) throws IOException {
+        Graph graph = this;
+            List<String> rawLines = Files.readAllLines(Paths.get(filepath),StandardCharsets.UTF_8);
+            boolean node_presentation = true;
+            for (int index = 0; index< rawLines.size(); index++) {
+                List<String> line =( Arrays.asList(rawLines.get(index).split(",", -1)));
+                if (node_presentation && line.size() == 1){
+                    node_presentation = false;
+                    index++; // on passe directement à l'index suivant car cette ligne n'est pas utilisable
+                    line =( Arrays.asList(rawLines.get(index).split(",", -1)));
+                }
+                if(node_presentation){ // quand on en est encore à la présentaton des noeuds, on les créé
+                    Node node = new Node();
+                    if (isDrone){
+                        node.setId(line.get(0));
+                        node.setRecharge(Boolean.parseBoolean(line.get(1)));
+                    }else{
+                        node.setId(line.get(1));
+                    }
+                    graph.addNode(node);
+                }else { // après la présentation des noeuds, on les relie entre eux
+                    Node node0 = graph.getNodeFromIndex(Integer.parseInt(line.get(0))-1);
+                    Node node1 = graph.getNodeFromIndex(Integer.parseInt(line.get(1))-1);
+                    double weight = 1;
+                            if(isDrone){
+                                weight = Double.parseDouble(line.get(2));
+                            }
+                    Edge edge0 = new Edge(node0,node1,weight);
+                    Edge edge1 = new Edge(node1,node0,weight);
+                    node0.addEdge(edge0);
+                    node1.addEdge(edge1);
+                    graph.addEdgeInListOnly(edge0);
+                    graph.addEdgeInListOnly(edge1);
 
-        FileReader fr1Stops = new FileReader(Library.stopDirectory(line));
-        StopHandler handleStops1 = new StopHandler(fr1Stops,line);
-
-        this.addLine(handleStopTimes1,handleStops1);
-    }
-
-    protected   void  addLine(StopTimeHandler stopTimeHandler, StopHandler stopHandler){ //pour ajouter une ligne de métro
-        Map<String, String> nameOfId = stopHandler.getNameOfId();
-        Map<String, Map> stops = stopHandler.getStops();
-        for (List<String> subStopList : new ArrayList<List>(stopTimeHandler.getStopList()) // on prend tous les sets de liste d'arrets
-             ) {
-            Graph subgraph = graphFromSmallListAndStopContent(subStopList,nameOfId,stops);
-            this.merge(subgraph);
-        }
-
-    }
-
-    protected Graph graphFromSmallListAndStopContent (List<String> smallList, Map<String, String> nameOfId, Map<String,Map> stops){ // l'argument stops c'est du Map<String,Map<String,String>> en vrai mais il veux pas être aussi précis
-        Graph subGraph = new Graph();
-        Node oldNode = new Node();
-        Node nowNode = new Node();
-        for (int i = smallList.size()-1; i > -1 ; i--) { // on va décroissant car on ajoute des liens entre deux Edges existants (les deriers de listes ne sont liés à personne)
-
-            // --------------- on créé le node ---------------
-
-            String nodeName = nameOfId.get(smallList.get(i));
-            Map<String,String> stop = stops.get(nodeName);
-            oldNode = nowNode;
-            nowNode = new Node(); // on ré instancie si non on ne va faire que réécrire sur la meme instance
-            nowNode.setId(nodeName);
-            nowNode.setLatitude(Double.parseDouble(stop.get("latitude")));
-            nowNode.setLongitude(Double.parseDouble(stop.get("longitude")));
-            nowNode.addLine(stop.get("ligne"));
-            if (i!= smallList.size()-1){
-                nowNode.addEdge(new Edge(nowNode,oldNode));
+                }
             }
-            // --------------- les conséquences sur le graph ---------------
-            subGraph.addNode(nowNode);
-        }
-        return subGraph;
     }
+
 
     public void addNode (Node node){
+        // on vire l'existant si c'était le cas
+
+        this.nodes.remove(node);
+        this.nodesIndex.remove(node.getId());
+        this.edges.removeAll(node.getEdgesList());
+
+        //on met le neuf
         this.nodes.add(node);
         this.nodesIndex.add(node.getId());
-        this.edges.removeAll(node.getEdgesList());//au cas ou il y aie des duplicatas
         this.edges.addAll(node.getEdgesList());
     }
-
-    protected void merge (Graph graphToMerge){
-        List<Node>toMergeNodes = graphToMerge.getNodes();
-        List<Edge>toMergeEdges = graphToMerge.getEdges();
-
-        for (Node toMergeNode:toMergeNodes //on prend chaque node à merger, si la station existe déjà, les deux mergent, si non, on la rajoute
-             ) {
-            Node localCorrespondingNode = getNodeFromId(toMergeNode.getId());
-            if (localCorrespondingNode!=null){
-                localCorrespondingNode.merge(toMergeNode);
-            }else {
-                this.nodes.add(toMergeNode);
-                this.nodesIndex.add(toMergeNode.getId());
-            }
-        }
-
-        // on réoriente les edge car ils sont nottés par référence (je crois)
-        for (Edge toAjustEdge:toMergeEdges
-             ) {
-            Node from = toAjustEdge.getFrom();
-            toAjustEdge.setFrom(this.getNodeFromId(from.getId()));//normalement le from est déjà géré par le node merge mais on insiste
-            Node to = toAjustEdge.getTo();
-            toAjustEdge.setTo(this.getNodeFromId(to.getId()));
-        }
-        this.edges.addAll(toMergeEdges);
-        this.edges = Edge.removeDuplicatesInList(this.edges);
-
+    public void addEdgeInListOnly (Edge edge){
+        this.edges.remove(edge);
+        this.edges.add(edge);
     }
 
-    // ----------------------------------------------------------------------------------------------------------
-    // ------------------------------------ Fonctions de réparation ----------------------------
-    // ----------------------------------------------------------------------------------------------------------
-    public void consolidate () {
-        this.edges = Edge.consolidateEdgeList(this.edges,this);
-    }
 
     // ----------------------------------------------------------------------------------------------------------
     // --------------------------------------- Getters & Setters ------------------------------------------------
@@ -151,11 +122,11 @@ public class Graph {
 
     // --------------- les ajoutés ---------------
     // nodes
-    public int getStationNodeIndex (String name){
+    public int getNodeIndex (String name){
         return this.nodesIndex.indexOf(name);
     }
     public Node getNodeFromId (String name){
-        int index = getStationNodeIndex(name);
+        int index = getNodeIndex(name);
         if (index == -1){
             return null;
         }
@@ -229,46 +200,12 @@ public class Graph {
     public void printWithInfos () {System.out.println("taille "+nodesIndex.size()+" nodes : " + nodesIndex);}
 
     // ----------------------------------------------------------------------------------------------------------
-    // ------------------------------------------ Coupure en 2 --------------------------------------------------
-    // ----------------------------------------------------------------------------------------------------------
-
-//    public static ArrayList<Graph> graphCut (Graph graph, ArrayList<Integer> indexGroup){
-//        ArrayList<Graph> graphs = new ArrayList<Graph>();
-//        graphs.add(Graph.graphExtract(graph,indexGroup,true));
-//        graphs.add(Graph.graphExtract(graph,indexGroup,false));
-//        return graphs;
-//
-//    }
-    public static Graph graphExtract (Graph graph, ArrayList<Integer> indexGroup, boolean indexGroupIsToTake){
-        Graph newGraph = new Graph();
-        for (int i = 0; i <graph.nodes.size() ; i++) {
-            if(indexGroup.indexOf(i)!=-1 == indexGroupIsToTake){  // si ce node est à prendre
-                Node node = graph.nodes.get(i);
-                Node newNode = node.cloneButNotEdgeList();
-                ArrayList newEdgeList = new ArrayList<Edge>();
-                for (Edge edge:node.getEdgesList()) {
-                    if ((indexGroup.indexOf(graph.nodes.indexOf(edge.from))!=-1 == indexGroupIsToTake) && (indexGroup.indexOf(graph.nodes.indexOf(edge.to))!=-1 == indexGroupIsToTake) ){ //si cet edge est à prendre (ie: si from est dedans et doit être pris, et que to aussi )
-                        newEdgeList.add(edge.cloneButKeepNodes());
-                    }
-                }
-                newNode.setEdgesList(newEdgeList);
-
-                newGraph.nodesIndex.add(newNode.getId());
-                newGraph.nodes.add(newNode);
-                newGraph.edges.removeAll(newEdgeList);
-                newGraph.edges.addAll(newEdgeList);
-            }
-        }
-        newGraph.consolidate(); //parce que les Edges pointent encore vers les anciens Nodes
-        return newGraph;
-    }
-
-    // ----------------------------------------------------------------------------------------------------------
     // ------------------------------------------- Les removers -------------------------------------------------
     // ----------------------------------------------------------------------------------------------------------
     public void removeEdge (Edge edgeToRemove){
         edges.remove(edgeToRemove);
-        nodes.get(nodesIndex.indexOf(edgeToRemove.getFromId())).getEdgesList().remove(edgeToRemove);
+        edgeToRemove.from.getEdgesList().remove(edgeToRemove);
+//        nodes.get(nodesIndex.indexOf(edgeToRemove.getFrom().getId())).getEdgesList().remove(edgeToRemove);
     }
 
 
