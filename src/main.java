@@ -43,8 +43,8 @@ public class main
 			affichage();
 			Scanner scan = new Scanner(System.in);
 			String choice=null;
-			do {
-				choice = scan.nextLine();
+			choice = scan.nextLine();
+			while(!choice.equals("c")){
 			switch (choice) {
 				case "a":
 					//System.out.println("Hello");
@@ -87,6 +87,7 @@ public class main
 						}
 					} 
 					affichage();
+					choice=forceABC();
 					break;
 				case "b":
 					
@@ -111,9 +112,11 @@ public class main
 							break;
 						}
 						
-					}while(!(choiceR.equals("c"));
+					}while(!(choiceR.equals("c"));*/
 					affichage();
-					break;*/
+					choice=forceABC();
+					break;
+					
 				case"c":
 					break;
 				default :
@@ -121,7 +124,7 @@ public class main
 					affichage();
 					break;
 			}
-		}while(!choice.equals("c"));
+		}
 	}
 	
 }
