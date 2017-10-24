@@ -6,7 +6,11 @@ import java.io.IOException;
 public class TestMain {
     public static void main(String[] args) throws IOException {
         Graph recetteGraph = Hasse.creerGrapheOriente();
-        recetteGraph.printGraphOriente();
+       // recetteGraph.printGraphOriente();
+
+        Hasse.genHasse(recetteGraph);
+       // Hasse.printDiagHasse(recetteGraph);
+
 //        Graph graphDrone = new Graph();
 //        graphDrone.fillGraph("arrondissements.txt",true,false );
 //        graphDrone.lireGraph();
