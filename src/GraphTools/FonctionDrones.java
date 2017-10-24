@@ -1,6 +1,13 @@
 package GraphTools;
 
+import java.io.IOException;
+
 public class FonctionDrones {
+    public  Graph creerGraphe() throws IOException {
+        Graph graphDrone = new Graph();
+        graphDrone.fillGraph("arrondissements.txt",true,false );
+        return graphDrone;
+    }
     public static void plusCourtChemin(Graph graphe, String idNode_1, String idNode_2, int weightCategory){
         double powerConsumptionRate = 0.0;
         switch (weightCategory){
