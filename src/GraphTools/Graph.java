@@ -219,6 +219,23 @@ public class Graph {
 
         }
     }
+    public void printGraphOriente(){
+
+        for (int i=0; i<this.nodes.size(); i++) {
+            Node node = this.nodes.get(i);
+            System.out.print("( objet "+node.id+" ");
+            if (node.getEdgesList() != null && node.getEdgesList().size()>0){
+                System.out.print(",(");
+                for ( int j=0; j< node.getEdgesList().size();j++) {
+                    Edge edge = node.getEdgesList().get(j);
+                    System.out.print(" ("+edge.to.getId()+" ) ");
+                }
+                System.out.println(") )");
+            }
+
+
+        }
+    }
 
     // ----------------------------------------------------------------------------------------------------------
     // ------------------------------------------- Les removers -------------------------------------------------
