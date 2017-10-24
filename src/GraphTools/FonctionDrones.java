@@ -3,7 +3,7 @@ package GraphTools;
 import java.io.IOException;
 
 public class FonctionDrones {
-    public  Graph creerGraphe() throws IOException {
+    public static Graph creerGraphe() throws IOException {
         Graph graphDrone = new Graph();
         graphDrone.fillGraph("arrondissements.txt",true,false );
         return graphDrone;

@@ -135,7 +135,17 @@ public class DijkstraPlus {
     }
 
     public void printSP (int v){
-        System.out.println("path : "+this.getShortestPathOfId(v)+" | temps : "+this.distTo(v)+" minutes | changement de la baterie : "+ (1-this.consumedEnergy.get(v)));
+        System.out.println("path : ");
+        printPaht(this.getShortestPathOfId(v));
+        System.out.print(" | temps : "+this.distTo(v)+" minutes | changement de la baterie : "+ (1-this.consumedEnergy.get(v)));
+    }
+    public static void printPaht( ArrayList<String> path){
+        for (int i= 0; i< path.size();i++){
+            System.out.print(path.get(i));
+            if (i<path.size()-1){
+                System.out.print(" -> ");
+            }
+        }
     }
 
     public void print () {
