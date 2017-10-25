@@ -24,7 +24,7 @@ public class FonctionDrones {
             case 3: powerConsumptionRate = 0.04;
             break;
         }
-        DijkstraPlus pathSearch_3_3 = new DijkstraPlus(graphe,graphe.getNodeIndex(idNode_1),powerConsumptionRate);
+        GraphTools.DijkstraPlus pathSearch_3_3 = new GraphTools.DijkstraPlus(graphe,graphe.getNodeIndex(idNode_1),powerConsumptionRate);
         if (pathSearch_3_3.hasPathTo(graphe.getNodeIndex(idNode_2)) ){
             System.out.println("un 3.3 ampères suffit en prenant le chemin suivant :");
             pathSearch_3_3.printSP(graphe.getNodeIndex(idNode_2));
@@ -37,7 +37,7 @@ public class FonctionDrones {
                 case 3: powerConsumptionRate = 0.025;
                 break;
             }
-            DijkstraPlus pathSearch_5_0 = new DijkstraPlus(graphe,graphe.getNodeIndex(idNode_1),powerConsumptionRate);
+            GraphTools.DijkstraPlus pathSearch_5_0 = new GraphTools.DijkstraPlus(graphe,graphe.getNodeIndex(idNode_1),powerConsumptionRate);
             if (pathSearch_5_0.hasPathTo(graphe.getNodeIndex(idNode_2))){
                 System.out.println("un 5.0 ampères convient en prenant le chemin suivant :");
                 pathSearch_5_0.printSP(graphe.getNodeIndex(idNode_2));

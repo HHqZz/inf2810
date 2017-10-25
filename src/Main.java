@@ -1,4 +1,3 @@
-import static java.lang.System.out;
 import java.util.Scanner;
 import GraphTools.FonctionDrones;
 import GraphTools.Graph;
@@ -8,6 +7,7 @@ import java.io.IOException;
 public class Main
 {
 	public static void affichage() {
+		System.out.println("");
 		System.out.println("Menu:");
 		System.out.println("(a) Drones");
 		System.out.println("(b) Recettes");
@@ -15,6 +15,7 @@ public class Main
 		System.out.println("Veuillez enter un index:");
 	}
 	public static void affichageD() {
+		System.out.println("");
 		System.out.println("Menu:");
 		System.out.println("(a) Mettre a jour la carte");
 		System.out.println("(b) Determiner le plus court chemin securitaire ");
@@ -22,6 +23,7 @@ public class Main
 		System.out.println("Veuillez enter un index:");
 	}
 	public static void affichageR() {
+		System.out.println("");
 		System.out.println("Menu:");
 		System.out.println("(a) Creer et afficher le graphe des recettes");
 		System.out.println("(b) Generer et afficher le diagramme de Hasse");
