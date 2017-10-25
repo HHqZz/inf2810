@@ -1,11 +1,11 @@
 import static java.lang.System.out;
 import java.util.Scanner;
-import paquage.FonctionDrones;
-import paquage.Graph;
-import paquage.Hasse;
+import GraphTools.FonctionDrones;
+import GraphTools.Graph;
+import GraphTools.Hasse;
 import java.io.IOException;
 
-public class main 
+public class Main
 {
 	public static void affichage() {
 		System.out.println("Menu:");
@@ -65,13 +65,13 @@ public class main
 							break;
 						case "b":
 							String pointDeDepart=null;
-							System.out.println("Veuillez entrer un point de départ:");
+							System.out.println("Veuillez entrer un point de dÃ©part:");
 							pointDeDepart = scan.nextLine();
 							String pointDeArrive=null;
-							System.out.println("Veuillez entrer un point d'arrivée:");
+							System.out.println("Veuillez entrer un point d'arrivÃ©e:");
 							pointDeArrive = scan.nextLine();
 							int weight=1;
-							System.out.println("Veuillez entrer le poids du colis: 1 pour léger, 2 pour moyen, 3 pour lourd ");
+							System.out.println("Veuillez entrer le poids du colis: 1 pour lÃ©ger, 2 pour moyen, 3 pour lourd ");
 							weight=scan.nextInt();
 							FonctionDrones.plusCourtChemin(drone,pointDeDepart,pointDeArrive,weight);
 							affichageD();
@@ -89,34 +89,35 @@ public class main
 					affichage();
 					choice=forceABC();
 					break;
-				case "b":
-					
-					/*//System.out.println("Hell");
-					String choiceR=null;
+					case "b":
+					//System.out.println("Hello");
 					affichageR();
-					do {
+					String choiceR= forceABC();
+					while(!(choiceR.equals("c"))) {
 						switch (choiceR) {
 						case "a":
-							creerGrapheOriente("nomFichier");
+							Graph graphe = Hasse.creerGrapheOriente();
+							graphe.lireGraph();
 							affichageR();
+							choiceR=forceABC();
 							break;
 						case "b":
-							genererHass();
+							Hasse.genererHasse();
 							affichageR();
+							choiceR=forceABC();
 							break;
 						case "c":
 							break;
-						default:
+						default :
 							System.out.println("Invalid index");
 							affichageR();
+							choiceR=null;
 							break;
 						}
-						
-					}while(!(choiceR.equals("c"));*/
+					}
 					affichage();
 					choice=forceABC();
 					break;
-					
 				case"c":
 					break;
 				default :

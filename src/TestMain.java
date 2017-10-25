@@ -7,8 +7,7 @@ public class TestMain {
     public static void main(String[] args) throws IOException {
         Graph recetteGraph = Hasse.creerGrapheOriente();
        // recetteGraph.printGraphOriente();
-
-        Hasse.genHasse(recetteGraph);
+        Hasse.genererHasse();
        // Hasse.printDiagHasse(recetteGraph);
 
 //        Graph graphDrone = new Graph();

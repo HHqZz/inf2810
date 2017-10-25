@@ -8,6 +8,12 @@ public class FonctionDrones {
         graphDrone.fillGraph("arrondissements.txt",true,false );
         return graphDrone;
     }
+    public static Graph creerGraphe(String filepath) throws IOException {
+        if (filepath == null|| filepath.length()==0){filepath="arrondissements.txt";}
+        Graph graphDrone = new Graph();
+        graphDrone.fillGraph(filepath,true,false );
+        return graphDrone;
+    }
     public static void plusCourtChemin(Graph graphe, String idNode_1, String idNode_2, int weightCategory){
         double powerConsumptionRate = 0.0;
         switch (weightCategory){
