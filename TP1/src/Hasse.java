@@ -55,6 +55,7 @@ public class Hasse{
 	public static void genererHasse() throws IOException {
 		Graph graph = creerGrapheOriente();
 		PreparerHasse(graph);
+		graph.lireGraph();
 		ArrayList<Node> MinimumNodes = new ArrayList<>();
 		ArrayList<Node> OrderNodes = new ArrayList<>();
 		for(Node node: graph.getNodes()){ //on remplis tous les nodes
