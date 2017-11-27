@@ -39,22 +39,30 @@ class Station :
         self.occupant=occupant
 
     def getDestinationNumber(self): #on épliche les requetes pour dire combien de types de destinations différentes existent
-        nbr = len(self.listeRequetes)
-        if nbr<=1 :
-            return nbr
-        nbr = 0
-        requestToIgnore =[]
+        if len(self.listeRequetes)==0 :
+            return 0,0
+        nbrForDrone1 = 0
+        nbrForDrone2 = 0
+        requestToIgnore = []
         for requete1 in self.listeRequetes :
+            weight = requete1.get_poids()
             sameDestinationDetected=False
-            if requete1 not in requestToIgnore:
+            if requete1 not in requestToIgnore :
                 for requete2 in self.listeRequetes :
                     if requete2 not in requestToIgnore:
-                        if requete1.get_destination()==requete2.get_destination:
+                        if requete1.get_destination()==requete2.get_destination():
                             sameDestinationDetected = True
+                            weight += requete2.get_poids()
                             requestToIgnore.append(requete2) # vu qu'on aura requete1==requette1, il s'auto éliminera et crééra une destination
+
             if sameDestinationDetected :
-                nbr += 1
-        return nbr
+                if weight<1001 :
+                    nbrForDrone1 +=1
+                    requete1.set_priority(1)
+                else :
+                    nbrForDrone2 += 1
+                    requete1.set_priority(2)
+        return nbrForDrone1,nbrForDrone2
 
     def getDroneNumberByType(self,type):
         i=0

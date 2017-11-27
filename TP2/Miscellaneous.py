@@ -1,6 +1,6 @@
 
 global debugMode
-debugMode = True
+debugMode = False
 global numberOfRequestCycle
 numberOfRequestCycle=0
 global maxRequestFiles

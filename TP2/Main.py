@@ -1,7 +1,7 @@
 from Stations.StationController import StationController
 from automates.RecogniseStateEngine import RecogniseStateEngine
 from automates.Transition import Transition
-from Miscellaneous import returnFalse, lireFichier
+from Miscellaneous import returnFalse, lireFichier, debugMode
 
 choixMenu=""
 
@@ -17,6 +17,19 @@ choixMenu=""
 # stationController.depotDrones()
 # stationController.printStats()
 stationController = False
+if (debugMode):
+    stationController = StationController()
+    for _ in range(15):
+        stationController.traiterLesRequetes('')
+    stationController.printStats()
+    stationController.cycleSansRequetes()
+    stationController.cycleSansRequetes()
+    stationController.printStats()
+    stationController.cycleSansRequetes()
+    stationController.cycleSansRequetes()
+    stationController.cycleSansRequetes()
+    stationController.cycleSansRequetes()
+    stationController.printStats()
 print ('test')
 while choixMenu != 'd':
     choixMenu = input("Menu Principal\n"

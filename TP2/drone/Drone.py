@@ -64,6 +64,8 @@ class Drone1(Drone):
 
     def __init__(self):
         super(Drone1, self).__init__()
+        self.capaciteMaximal=1000
+        self.capacite=1000
 
     def get_type(self):
         return 1
@@ -73,6 +75,8 @@ class Drone2(Drone):
 
     def __init__(self):
         super(Drone2, self).__init__()
+        self.capaciteMaximal=5000
+        self.capacite=5000
 
 
     def get_type(self):

@@ -5,6 +5,7 @@ class request:
     destination=False
     origine=False
     poids=False
+    priority=False
 
 
     #Methodes :
@@ -33,7 +34,10 @@ class request:
     def set_poids(self, poids):
         self.poids=int(poids)
 
-
+    def get_priority(self):
+        return self.priority
+    def set_priority(self,priority):
+        self.priority=priority
     # def lirerequete(path):
     #     a = {}
     #     with open(path, 'r') as f:
