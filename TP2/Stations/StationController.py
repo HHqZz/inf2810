@@ -97,8 +97,8 @@ class StationController:
 
 
     def chargementDrones(self):
-        for drone in self.allDronesList:
-            if drone.get_nbrColis() == 0 and drone.get_position():  # si un drone a vidé ses colis, on le décharge completement
+        for drone in self.dronesList:
+            if drone.get_nbrColis() == 0 and drone.get_position():  # si un drone a vidé ses colis, on le décharge completement donc on s en occupe pas ici
                 requetesLocales = drone.get_position().get_listeRequete()
                 for request in requetesLocales:
                     if drone.get_nbrColis() == 0 and drone.getCapacite() - request.get_poids() >= 0: # la ou est le drone on prend la première requete qu'il est capable de prendre
@@ -108,10 +108,6 @@ class StationController:
                         requetesLocales.remove(request) #on retire cette requete de la station
                 if len(requetesLocales) != 0 and drone.get_nbrColis() == 1:
                     for request in requetesLocales: #on regarde ce qui reste
-                        a= drone.getCapacite() - request.get_poids() >= 0
-                        b= drone.get_destination().get_nom()
-                        c= request.get_destination()
-                        d = c==b
                         if drone.getCapacite() - request.get_poids() >= 0 and drone.get_destination().get_nom() == request.get_destination():#si je peux prendre la requete car j'ai le poids suffisant et que je vais ou ele doit aller
                             drone.ajouterColis(request.get_poids())
                             requetesLocales.remove(request)
