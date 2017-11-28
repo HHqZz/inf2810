@@ -42,7 +42,7 @@ while choixMenu != 'd':
         stationController = StationController()
     elif choixMenu == 'b':
         if stationController !=False:
-            choixFile = input("entrez nom du fichier (se trouvant dans le dossier DataFiles)\n\n"
+            choixFile = input("entrez nom du fichier (se trouvant dans le dossier DataFiles -> Ex :'requetes1.txt')\n\n"
                               "-->")
             stationController.traiterLesRequetes(choixFile)
         else:
