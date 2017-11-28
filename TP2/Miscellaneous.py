@@ -27,7 +27,7 @@ def lireFichier(path):
         with file:
             tableauDeLignes = file.read().splitlines()
         return tableauDeLignes
-    except (FileNotFoundError,AttributeError):
+    except (FileNotFoundError,AttributeError,PermissionError):
         if "42" in path :
             print(funnyEasterEgg)
         print("le fichier demandé n'existe pas")

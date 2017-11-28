@@ -28,11 +28,13 @@ class StationController:
         self.stationList = [Station(i) for i in codes]
 
     def traiterLesRequetes(self, fileName):
-        self.lireReqetes(fileName)
-        self.equilibrerFlotte()
-        self.chargementDrones()
-        self.déplacementDrones()
-        self.depotDrones()
+        requetesOk = self.lireReqetes(fileName)
+        if requetesOk :
+            self.equilibrerFlotte()
+            self.chargementDrones()
+            self.déplacementDrones()
+            self.depotDrones()
+
     def cycleSansRequetes(self):
         self.equilibrerFlotte()
         self.chargementDrones()
@@ -97,7 +99,7 @@ class StationController:
 
 
     def chargementDrones(self):
-        for drone in self.dronesList:
+        for drone in self.allDronesList:
             if drone.get_nbrColis() == 0 and drone.get_position():  # si un drone a vidé ses colis, on le décharge completement donc on s en occupe pas ici
                 requetesLocales = drone.get_position().get_listeRequete()
                 for request in requetesLocales:
